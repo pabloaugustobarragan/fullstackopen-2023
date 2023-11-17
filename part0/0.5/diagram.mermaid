@@ -1,0 +1,16 @@
+sequenceDiagram
+    actor user
+    user->>browser: Go to https://studies.cs.helsinki.fi/exampleapp
+    
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp
+    server->>server: Match route "* /index.html"
+    
+    server-->>browser: HTML Document
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    server-->>browser: the css file
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    server-->>browser: the js file
+    browser-->>user: Render component at route /exampleapp
+
+    
+    

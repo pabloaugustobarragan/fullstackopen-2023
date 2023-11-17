@@ -1,0 +1,28 @@
+sequenceDiagram
+    actor user
+    user->>browser: Go to https://studies.cs.helsinki.fi/exampleapp/notes
+    
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    server->>server: Match route "* /index.html"
+    server->>BD: getAllNotes
+    BD-->>server: 
+    server-->>browser: HTML Document
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    server-->>browser: the css file
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    server-->>browser: the js file
+    browser-->>user: Render component at /exampleapp/notes
+
+    user->>browser: writingInput
+    user->>browser: Click Save
+    browser->>server: Post https://studies.cs.helsinki.fi/exampleapp/notes/new
+    
+    create participant Note1
+    server->>Note1: new
+    server->>BD: Insert Note1
+    BD-->>server:  
+    server->>BD: getAllNotes
+    BD-->>server: 
+    server-->>browser: 
+    browser-->>user: Render component at /exampleapp/notes
+    
