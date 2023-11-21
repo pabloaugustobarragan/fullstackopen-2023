@@ -7,16 +7,30 @@ const App = () => {
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+  const Statistics = (props) => {
+    return (
+      <div>
+        <h1>statistic</h1>
+        <div>good {props.good}</div>
+        <div>neutral {props.neutral}</div>
+        <div>bad {props.bad}</div>
+        <div>all {props.good + props.neutral + props.bad}</div>
+        <div>average {((props.good + props.neutral + props.bad) == 0 ? 0 : (props.good - props.bad) / (props.good + props.neutral + props.bad))}</div>
+        <div>positive {((props.good + props.neutral + props.bad) == 0 ? 0 : (props.good - props.bad) / (props.good + props.neutral + props.bad) * 100)}%</div>
+      </div>
+    )
+  }
+
 
   const handleGoodClick = () => {
-    setGood(good+1);
+    setGood(good + 1);
   }
 
   const handleNeutralClick = () => {
-    setNeutral(neutral+1);
+    setNeutral(neutral + 1);
   }
   const handleBadClick = () => {
-    setBad(bad+1);
+    setBad(bad + 1);
   }
 
   return (
@@ -26,17 +40,11 @@ const App = () => {
       <button onClick={handleNeutralClick}>neutral</button>
       <button onClick={handleBadClick}>bad</button>
 
-      <h1>statistic</h1>
-      <div>good {good}</div>
-      <div>neutral {neutral}</div>
-      <div>bad {bad}</div>
-      <div>all {good+neutral+bad}</div>
-      <div>average {((good+neutral+bad)==0? 0 : (good-bad)/(good+neutral+bad) )}</div>
-      <div>positive {((good+neutral+bad)==0? 0 :(good-bad)/(good+neutral+bad)*100)}%</div>
+      <Statistics good={good} neutral={neutral} bad={bad}/>
     </div>
   )
 }
 
-ReactDOM.render(<App />, 
+ReactDOM.render(<App />,
   document.getElementById('root')
 )
