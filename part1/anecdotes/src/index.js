@@ -14,6 +14,7 @@ const App = (props) => {
 
     setVote(newVotes)
   }
+  
 
   return (
     <div>
