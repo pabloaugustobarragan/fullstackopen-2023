@@ -6,6 +6,8 @@ import axios from 'axios'
 import Notification from './components/Notification'
 
 const App = () => {
+  const baseUrl = 'http://localhost:3001/api/persons/'
+
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -16,7 +18,7 @@ const App = () => {
   })
 
   const updateList = () => {
-    axios.get('http://localhost:3001/persons').then(response => {
+    axios.get(baseUrl).then(response => {
       if (response.statusText === 'OK') {
         setPersons(response.data)
       }
@@ -29,7 +31,7 @@ const App = () => {
 
   const handleDelete = (person) => {
     if (window.confirm(`Delete ${person.name}?`)) {
-      axios.delete(`http://localhost:3001/persons/${person.id}`)
+      axios.delete(`${baseUrl}${person.id}`)
         .then(() => {
           setPersons(persons.filter((item) => item.id !== person.id))
           setMessageNoti({ message: `Deleted ${person.name}`, type: 'success' })
@@ -57,7 +59,7 @@ const App = () => {
     if (person) {
       if (person.number == "") {
         person.number = newNumber
-        axios.put(`http://localhost:3001/persons/${person.id}`, person)
+        axios.put(`${baseUrl}${person.id}`, person)
           .then(() => {
             person.number = newNumber
             setNewName('')
@@ -80,7 +82,7 @@ const App = () => {
       } else if (person.number !== newNumber) {
         if (window.confirm(`${person.name} already added to phonebook, replace the old number with a new one?`)) {
           person.number = newNumber
-          axios.put(`http://localhost:3001/persons/${person.id}`, person)
+          axios.put(`${baseUrl}${person.id}`, person)
             .then(() => {
               setNewName('')
               setNewNumber('')
@@ -92,7 +94,7 @@ const App = () => {
             })
             .catch(err => {
               if (err.response.status === 404) {
-                
+
                 updateList()
                 setMessageNoti({ message: `Information of ${person.name} has already been removed from server`, type: 'error' })
                 setTimeout(() => {
@@ -101,13 +103,21 @@ const App = () => {
               }
             })
         }
+      } else {
+        
+        setNewName('')
+        setNewNumber('')
+        setMessageNoti({ message: `Information of ${person.name} no need for update`, type: 'error' })
+        setTimeout(() => {
+          setMessageNoti({ message: ``, type: '' })
+        }, 6000);
       }
     } else {
       if (newName === "") {
         alert(`the name cannot be empty`);
         return;
       }
-      axios.post('http://localhost:3001/persons', { name: newName, number: newNumber })
+      axios.post(`${baseUrl}`, { name: newName, number: newNumber })
         .then(() => {
           updateList()
           setNewName('')
@@ -117,7 +127,13 @@ const App = () => {
             setMessageNoti({ message: ``, type: '' })
           }, 3000);
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err.response.data.error)
+          setMessageNoti({ message: err.response.data.error, type: 'error' })
+          setTimeout(() => {
+            setMessageNoti({ message: ``, type: '' })
+          }, 3000);
+        })
     }
   }
 
